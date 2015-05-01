@@ -1,0 +1,24 @@
+{
+    "name": "gnoesiboe/microservice",
+    "authors": [
+        {
+            "name": "Gijs Nieuwenhuis",
+            "email": "gijsnieuwenhuis@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/http-foundation": "2.6.*",
+        "symfony/routing": "2.6.*",
+        "symfony/dependency-injection": "2.6.*",
+        "symfony/http-kernel": "2.6.*",
+        "symfony/config": "2.6.*",
+        "rhumsaa/uuid": "2.8.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Application": "lib",
+            "Domain": "lib",
+            "Utility": "lib"
+        }
+    }
+}
