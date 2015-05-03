@@ -5,8 +5,8 @@ namespace Application\Response\Factory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Utility\Environment;
 use Utility\Exception\ValidationException;
 use Utility\Exception\ValidationExceptionSet;
@@ -39,12 +39,11 @@ final class ErrorResponseFactory implements ErrorResponseFactoryInterface
      */
     public function createNotFoundResponse(NotFoundHttpException $exception)
     {
-        if ($this->environmentDetectionService->isEnvironment(Environment::LOCAL) === true) {
-            throw $exception;
-        }
-
         $body = array(
             'success' => false,
+            'error' => array(
+                'global' => $this->environmentDetectionService->isEnvironment(Environment::LOCAL) === true ? $exception->getMessage() : null,
+            )
         );
 
         return new JsonResponse($body, Response::HTTP_NOT_FOUND);
@@ -87,18 +86,17 @@ final class ErrorResponseFactory implements ErrorResponseFactoryInterface
     }
 
     /**
-     * @param MethodNotAllowedException $exception
+     * @param MethodNotAllowedHttpException $exception
      *
      * @return Response
      */
-    public function createMethodNotAllowedResponse(MethodNotAllowedException $exception)
+    public function createMethodNotAllowedResponse(MethodNotAllowedHttpException $exception)
     {
-        if ($this->environmentDetectionService->isEnvironment(Environment::LOCAL) === true) {
-            throw $exception;
-        }
-
         $body = array(
             'success' => false,
+            'error' => array(
+                'global' => $this->environmentDetectionService->isEnvironment(Environment::LOCAL) === true ? $exception->getMessage() : null,
+            )
         );
 
         return new JsonResponse($body, Response::HTTP_METHOD_NOT_ALLOWED);

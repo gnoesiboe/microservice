@@ -3,6 +3,7 @@
 namespace Utility\Repository;
 
 use Domain\Entity\Consumer;
+use Domain\Factory\DatabaseConsumerFactoryInterface;
 use Domain\Repository\ConsumerRepositoryInterface;
 use Domain\ValueObject\Username;
 use Utility\Database\DatabaseConnectionInterface;
@@ -18,11 +19,18 @@ final class DatabaseConsumerRepository implements ConsumerRepositoryInterface
     private $connection;
 
     /**
-     * @param DatabaseConnectionInterface $connection
+     * @var DatabaseConsumerFactoryInterface
      */
-    public function __construct(DatabaseConnectionInterface $connection)
+    private $databaseConsumerFactory;
+
+    /**
+     * @param DatabaseConnectionInterface $connection
+     * @param DatabaseConsumerFactoryInterface $databaseConsumerFactory
+     */
+    public function __construct(DatabaseConnectionInterface $connection, DatabaseConsumerFactoryInterface $databaseConsumerFactory)
     {
         $this->connection = $connection;
+        $this->databaseConsumerFactory = $databaseConsumerFactory;
     }
 
     /**
@@ -32,7 +40,7 @@ final class DatabaseConsumerRepository implements ConsumerRepositoryInterface
      */
     public function hasConsumerWithUsername(Username $username)
     {
-        $stmt = $this->connection->createStatement('SELECT COUNT(*) AS the_count FROM consumer WHERE username = ?');
+        $stmt = $this->connection->prepareStatement('SELECT COUNT(*) AS the_count FROM consumer WHERE username = ?');
 
         $stmt->execute(array($username->getValue()));
 
@@ -42,11 +50,31 @@ final class DatabaseConsumerRepository implements ConsumerRepositoryInterface
     }
 
     /**
+     * @param string $uuid
+     *
+     * @return Consumer|null
+     */
+    public function getOneByUUID($uuid)
+    {
+        $stmt = $this->connection->prepareStatement('SELECT * FROM consumer WHERE uuid = ?');
+
+        $stmt->execute(array($uuid));
+
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (count($results) === 0) {
+            return null;
+        }
+
+        return $this->databaseConsumerFactory->createConsumer($results[0]);
+    }
+
+    /**
      * @param Consumer $consumer
      */
     public function persist(Consumer $consumer)
     {
-        $stmt = $this->connection->createStatement('INSERT INTO consumer (guid, username, password) VALUES (?, ?, ?)');
+        $stmt = $this->connection->prepareStatement('INSERT INTO consumer (uuid, username, password) VALUES (?, ?, ?)');
 
         $stmt->execute(array(
             $consumer->getUUID()->getValue(),

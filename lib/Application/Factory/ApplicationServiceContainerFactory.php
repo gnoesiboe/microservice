@@ -54,6 +54,7 @@ final class ApplicationServiceContainerFactory
         $this->registerValidators($container);
         $this->registerDomainServices($container);
         $this->registerDomainRepositories($container);
+        $this->registerDomainFactories($container);
 
         return $container;
     }
@@ -76,6 +77,10 @@ final class ApplicationServiceContainerFactory
         $container
             ->register('controller.consumer.register', 'Application\Controller\ConsumerRegisterController')
             ->addArgument(new Reference('service_container'));
+
+        $container
+            ->register('controller.consumer.detail', 'Application\Controller\ConsumerDetailController')
+            ->addArgument(new Reference('service_container'));
     }
 
     /**
@@ -88,6 +93,11 @@ final class ApplicationServiceContainerFactory
         $container
             ->register('request.consumer.register', 'Application\Request\ConsumerRegistrationRequest')
             ->addArgument(new Reference('request'));
+
+        $container
+            ->register('request.consumer.detail', 'Application\Request\ConsumerDetailRequest')
+            ->addArgument(new Reference('request'))
+            ->addArgument(new Reference('domain.repository.consumer'));
     }
 
     /**
@@ -101,11 +111,21 @@ final class ApplicationServiceContainerFactory
     /**
      * @param ContainerBuilder $container
      */
+    private function registerDomainFactories(ContainerBuilder $container)
+    {
+        $container
+            ->register('utility.factory.database.consumer', 'Utility\Factory\DatabaseConsumerFactory');
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     */
     private function registerDomainRepositories(ContainerBuilder $container)
     {
         $container
             ->register('domain.repository.consumer', 'Utility\Repository\DatabaseConsumerRepository')
-            ->addArgument(new Reference('database.connection'));
+            ->addArgument(new Reference('database.connection'))
+            ->addArgument(new Reference('utility.factory.database.consumer'));
     }
 
     /**

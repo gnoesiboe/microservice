@@ -4,8 +4,8 @@ namespace Utility\Response\Factory;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 /**
  * Interface ErrorResponseFactoryInterface
@@ -28,11 +28,11 @@ interface ErrorResponseFactoryInterface
     public function createBadRequestResponse(BadRequestHttpException $badRequestHttpException);
 
     /**
-     * @param MethodNotAllowedException $exception
+     * @param MethodNotAllowedHttpException $exception
      *
      * @return Response
      */
-    public function createMethodNotAllowedResponse(MethodNotAllowedException $exception);
+    public function createMethodNotAllowedResponse(MethodNotAllowedHttpException $exception);
 
     /**
      * @param \Exception $exception

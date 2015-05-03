@@ -31,15 +31,15 @@ final class ConsumerRegistrationRequest extends Request implements ConsumerRegis
     }
 
     /**
-     * @param HttpRequest $request
+     * @param HttpRequest $httpRequest
      */
-    protected function validateHttpRequest(HttpRequest $request)
+    protected function validateHttpRequest(HttpRequest $httpRequest)
     {
-        parent::validateHttpRequest($request);
+        parent::validateHttpRequest($httpRequest);
 
         try {
             $input = (new JsonParser())
-                ->parse($request->getContent(), true);
+                ->parse($httpRequest->getContent(), true);
         } catch (InvalidRequestFormatException $exception) {
             throw new BadRequestHttpException('Could not parse request body');
         }

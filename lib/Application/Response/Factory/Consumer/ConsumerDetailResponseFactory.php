@@ -7,9 +7,9 @@ use Domain\Entity\Consumer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Class ConsumerRegistrationResponseFactory
+ * Class ConsumerDetailResponseFactory
  */
-final class ConsumerRegistrationResponseFactory extends ConsumerResponseFactory
+final class ConsumerDetailResponseFactory extends ConsumerResponseFactory
 {
 
     /**
@@ -19,6 +19,6 @@ final class ConsumerRegistrationResponseFactory extends ConsumerResponseFactory
      */
     public function createSuccessResponse(Consumer $consumer)
     {
-        return $this->createCreatedResponseInstance($this->createBody($consumer));
+        return $this->createSuccessResponseInstance($this->createBody($consumer));
     }
 }

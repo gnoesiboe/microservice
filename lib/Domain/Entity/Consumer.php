@@ -21,6 +21,7 @@ final class Consumer
      * @var string
      */
     private $password;
+
     /**
      * @var UUID
      */

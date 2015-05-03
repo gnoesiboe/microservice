@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -56,6 +57,8 @@ final class RequestHandler
         try {
             $routeParameters = $this->urlMatcher->matchRequest($httpRequest);
 
+            $httpRequest->attributes->add($routeParameters);
+
             $request = $this->extractRequestFromRouteParameters($routeParameters);
             $controller = $this->extractControllerFromRouteParameters($routeParameters);
 
@@ -64,9 +67,11 @@ final class RequestHandler
             return $this->errorResponseFactory->createBadRequestResponse($exception);
         } catch (BadRequestHttpException $exception) {
             return $this->errorResponseFactory->createBadRequestResponse($exception);
-        }  catch (NotFoundHttpException $exception) {
+        } catch (NotFoundHttpException $exception) {
             return $this->errorResponseFactory->createNotFoundResponse($exception);
         } catch (MethodNotAllowedException $exception) {
+            $exception = new MethodNotAllowedHttpException($exception->getAllowedMethods(), 'Used request method not allowed. Allowed: ' . implode(', ', $exception->getAllowedMethods()));
+
             return $this->errorResponseFactory->createMethodNotAllowedResponse($exception);
         } catch (\Exception $exception) {
             return $this->errorResponseFactory->createInternalServerErrorResponse($exception);

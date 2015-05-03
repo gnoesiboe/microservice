@@ -35,11 +35,11 @@ abstract class Request
     }
 
     /**
-     * @param HttpRequest $request
+     * @param HttpRequest $httpRequest
      */
-    protected function validateHttpRequest(HttpRequest $request)
+    protected function validateHttpRequest(HttpRequest $httpRequest)
     {
-        $this->validateRequestHasCorrectContentType($request);
+        $this->validateRequestHasCorrectContentType($httpRequest);
     }
 
     /**

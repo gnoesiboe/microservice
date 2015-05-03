@@ -19,6 +19,13 @@ interface ConsumerRepositoryInterface
     public function hasConsumerWithUsername(Username $username);
 
     /**
+     * @param string $uuid
+     *
+     * @return Consumer|null
+     */
+    public function getOneByUUID($uuid);
+
+    /**
      * @param Consumer $consumer
      */
     public function persist(Consumer $consumer);

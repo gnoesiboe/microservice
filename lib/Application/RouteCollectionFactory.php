@@ -32,5 +32,10 @@ final class RouteCollectionFactory
             'consumer.register',
             $route = new Route('/consumer/register', array('_request' => 'request.consumer.register', '_controller' => 'controller.consumer.register'), array(), array(), '', array(), 'POST')
         );
+
+        $routeCollection->add(
+            'consumer.register',
+            $route = new Route('/consumer/{uuid}', array('_request' => 'request.consumer.detail', '_controller' => 'controller.consumer.detail'), array(), array(), '', array(), 'GET')
+        );
     }
 }

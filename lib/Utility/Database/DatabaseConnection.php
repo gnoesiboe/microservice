@@ -25,7 +25,7 @@ final class DatabaseConnection implements DatabaseConnectionInterface
      *
      * @return \PDOStatement
      */
-    public function createStatement($query)
+    public function prepareStatement($query)
     {
         return $this->pdo->prepare($query);
     }

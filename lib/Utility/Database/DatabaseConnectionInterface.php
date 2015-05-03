@@ -13,5 +13,5 @@ interface DatabaseConnectionInterface
      *
      * @return \PDOStatement
      */
-    public function createStatement($query);
+    public function prepareStatement($query);
 }
